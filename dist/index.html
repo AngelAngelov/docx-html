@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style>
+    .doc {
+        width: 100%;
+        height: 500px;
+      }
+    </style>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
+    crossorigin="anonymous"></script>
+  <script src="index.js"></script>
+</head>
+
+<body>
+  <!-- <iframe class="doc" src="dist/dotNet.docx"></iframe> -->
+  <div class="col-md-6 float-left" style="border: 1px solid grey">
+    <h4>Избери файл:</h4>
+    <div class="col-md-8">
+      <div class="input-group">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="inputGroupFile04" onchange="test(this)" />
+          <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+        </div>
+      </div>
+    </div>
+
+    <h4 class="w-100">Избран файл</h4>
+    <div id="doc"></div>
+  </div>
+  <div class="col-md-6 float-left">
+    <h4 class="w-100">Файл зареден с AJAX</h4>
+    <div id="ajax-doc"></div>
+  </div>
+  <script>
+    function test(input) {
+      require('docx2html')(input.files[0], {
+        container: document.getElementById('doc')
+      }).then(function (converted) {
+        //text.value = converted.toString();
+      });
+    }
+
+    window.onload = function () {
+      var req = new XMLHttpRequest();
+      req.open("GET", "dotNet.docx", true);
+      //Response Type is Blob
+      req.responseType = "blob";
+
+      req.onload = (e) => {
+        let blob = req.response;
+        blob.name = "test.docx";
+
+        require("docx2html")(blob,
+          { container: document.getElementById('ajax-doc') })
+          .then((converted) => {
+            // here will be the converted document
+          })
+      };
+
+      req.send();
+    }
+  </script>
+</body>
+
+</html>
